@@ -21,20 +21,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AbstractTestController extends WebTestCase
 {
-    /**
-     * @var Client
-     */
-    private $client;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->client = self::createClient([], [
-            'HTTP_HOST' => '127.0.0.1:8000',
-            'HTTPS' => true
-        ]);
-
-    }
 
     protected static function reloadDataFixtures()
     {

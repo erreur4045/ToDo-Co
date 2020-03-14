@@ -8,7 +8,7 @@
  * FileName : TaskTypeTest.php as TaskTypeTest
  */
 
-namespace Tests\Form;
+namespace Tests\AppBundle\Form;
 
 
 use AppBundle\Entity\Task;
@@ -17,10 +17,6 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class TaskTypeTest extends TypeTestCase
 {
-    protected function setUp()
-    {
-        parent::setUp();
-    }
 
     public function testFormFields()
     {
@@ -29,10 +25,6 @@ class TaskTypeTest extends TypeTestCase
             'content' => 'Content test'
         ];
 
-        $toCompare = $this->getMock(Task::class);
-        $form = $this->factory->create(TaskType::class, $toCompare);
-
-        $task = $this->getMock(Task::class);
         $task->setTitle('Titre test');
         $task->setContent('Content test');
 

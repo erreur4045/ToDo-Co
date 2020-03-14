@@ -18,7 +18,7 @@ class TaskTest extends TestCase
 {
     private $task;
 
-    protected function setUp()
+    protected function setUp():void
     {
         parent::setUp();
         $this->task = new Task();
