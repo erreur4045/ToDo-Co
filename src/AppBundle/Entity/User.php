@@ -79,9 +79,9 @@ class User implements UserInterface
 
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getUsername():string
+    public function getUsername()
     {
         return $this->username;
     }
@@ -97,9 +97,9 @@ class User implements UserInterface
 
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPassword():string
+    public function getPassword()
     {
         return $this->password;
     }
@@ -115,9 +115,9 @@ class User implements UserInterface
 
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail():string
+    public function getEmail()
     {
         return $this->email;
     }
