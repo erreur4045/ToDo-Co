@@ -40,52 +40,113 @@ class Task
      */
     private $isDone;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="task")
+     */
+    private $user;
+
+    /**
+     * Task constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->createdAt = new \Datetime();
         $this->isDone = false;
     }
 
-    public function getId()
+    /**
+     * @return int
+     */
+    public function getId():int
     {
         return $this->id;
     }
 
-    public function getCreatedAt()
+    /**
+     * @param $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getCreatedAt(): \Datetime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt($createdAt)
+    /**
+     * @param \Datetime $createdAt
+     */
+    public function setCreatedAt(\Datetime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
-    public function getTitle()
+    /**
+     * @return string
+     */
+    public function getTitle():string
     {
         return $this->title;
     }
 
-    public function setTitle($title)
+    /**
+     * @param $title
+     */
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
 
-    public function getContent()
+    /**
+     * @return string
+     */
+    public function getContent():string
     {
         return $this->content;
     }
 
-    public function setContent($content)
+    /**
+     * @param $content
+     */
+    public function setContent($content): void
     {
         $this->content = $content;
     }
 
-    public function isDone()
+    /**
+     * @return User
+     */
+    public function getUser():User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isDone():bool
     {
         return $this->isDone;
     }
 
+    /**
+     * @param $flag
+     */
     public function toggle($flag)
     {
         $this->isDone = $flag;
