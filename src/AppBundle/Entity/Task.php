@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use Datetime;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -47,11 +49,11 @@ class Task
 
     /**
      * Task constructor.
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct()
     {
-        $this->createdAt = new \Datetime();
+        $this->createdAt = new Datetime();
         $this->isDone = false;
     }
 
@@ -72,17 +74,17 @@ class Task
     }
 
     /**
-     * @return \Datetime
+     * @return Datetime
      */
-    public function getCreatedAt(): \Datetime
+    public function getCreatedAt(): Datetime
     {
         return $this->createdAt;
     }
 
     /**
-     * @param \Datetime $createdAt
+     * @param Datetime $createdAt
      */
-    public function setCreatedAt(\Datetime $createdAt): void
+    public function setCreatedAt(Datetime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
