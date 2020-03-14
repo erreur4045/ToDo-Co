@@ -90,9 +90,9 @@ class Task
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTitle():string
+    public function getTitle()
     {
         return $this->title;
     }
@@ -106,9 +106,9 @@ class Task
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getContent():string
+    public function getContent()
     {
         return $this->content;
     }
