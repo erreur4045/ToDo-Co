@@ -43,7 +43,7 @@ class Task
     private $isDone;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="task")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="task")
      */
     private $user;
 
@@ -124,7 +124,7 @@ class Task
     /**
      * @return User
      */
-    public function getUser():User
+    public function getUser()
     {
         return $this->user;
     }
