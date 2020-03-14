@@ -7,6 +7,7 @@ use AppBundle\Form\TaskType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class TaskController extends Controller
 {
@@ -15,11 +16,19 @@ class TaskController extends Controller
      */
     public function listAction()
     {
-        return $this->render('task/list.html.twig', ['tasks' => $this->getDoctrine()->getRepository('AppBundle:Task')->findAll()]);
+        return $this->render(
+            'task/list.html.twig',
+            [
+                'tasks' => $this->getDoctrine()
+                    ->getRepository('AppBundle:Task')
+                    ->findAll()
+            ]
+        );
     }
 
     /**
      * @Route("/tasks/create", name="task_create")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function createAction(Request $request)
     {
@@ -44,6 +53,7 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     * @IsGranted("ROLE_ADMIN")
      */
     public function editAction(Task $task, Request $request)
     {
@@ -67,6 +77,7 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/toggle", name="task_toggle")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function toggleTaskAction(Task $task)
     {

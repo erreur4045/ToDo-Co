@@ -40,8 +40,14 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @ORM\Column(type="json")
+     */
+    private $roles;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Task", mappedBy="user")
      */
+
     private $task;
 
     /**
@@ -63,7 +69,7 @@ class User implements UserInterface
     /**
      * @return int
      */
-    public function getId():int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -131,13 +137,23 @@ class User implements UserInterface
         $this->email = $email;
     }
 
-
     /**
-     * @return array
+     * Set roles.
+     *
+     * @param array $roles
+     *
+     * @return User
      */
-    public function getRoles():array
+    public function setRoles($roles)
     {
-        return ['ROLE_USER'];
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles;
     }
 
     public function eraseCredentials()

@@ -60,7 +60,7 @@ class Task
     /**
      * @return int
      */
-    public function getId():int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -141,7 +141,7 @@ class Task
     /**
      * @return bool
      */
-    public function isDone():bool
+    public function isDone(): bool
     {
         return $this->isDone;
     }
