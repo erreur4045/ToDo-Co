@@ -18,7 +18,7 @@ class UserTest extends TestCase
 {
     private $user;
 
-    protected function setUp()
+    protected function setUp():void
     {
         parent::setUp();
         $this->user = new User();
@@ -42,4 +42,16 @@ class UserTest extends TestCase
         static::assertSame('maxime', $this->user->getEmail());
     }
 
+    public function testGetRoles()
+    {
+        static::assertSame(array('ROLE_USER'), $this->user->getRoles());
+    }
+    public function testGetId()
+    {
+        static::assertSame(null, $this->user->getId());
+    }
+    public function testGetSalt()
+    {
+        static::assertSame(null, $this->user->getSalt());
+    }
 }

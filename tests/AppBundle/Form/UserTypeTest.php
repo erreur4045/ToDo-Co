@@ -8,7 +8,7 @@
  * FileName : UserTypeTest.php as UserTypeTest
  */
 
-namespace Tests\Form;
+namespace Tests\AppBundle\Form;
 
 
 use AppBundle\Entity\User;
@@ -18,11 +18,6 @@ use Symfony\Component\Form\Test\TypeTestCase;
 
 class UserTypeTest extends TypeTestCase
 {
-    protected function setUp()
-    {
-        parent::setUp();
-    }
-
     public function testFormFields()
     {
         $data = [
@@ -44,11 +39,8 @@ class UserTypeTest extends TypeTestCase
         $user->setEmail('maximmmmmmme@maxime.com');
         $user->setUsername('maxime');
         $user->setPassword('maxime');
-        //dump($user->method('setEmail'));
-
+        //dump($user);
         $form->submit($data);
-        //dump($user->getEmail(), $toCompare);
-        die();
         static::assertEquals($user, $toCompare);
     }
 }
