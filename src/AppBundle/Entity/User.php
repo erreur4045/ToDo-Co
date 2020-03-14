@@ -39,52 +39,115 @@ class User implements UserInterface
      */
     private $email;
 
-    public function getId()
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="user")
+     */
+    private $task;
+
+    /**
+     * @return mixed
+     */
+    public function getTask()
+    {
+        return $this->task;
+    }
+
+    /**
+     * @param mixed $task
+     */
+    public function setTask($task): void
+    {
+        $this->task = $task;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId():int
     {
         return $this->id;
     }
 
-    public function getUsername()
+
+    /**
+     * @param $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getUsername():string
     {
         return $this->username;
     }
 
-    public function setUsername($username)
+
+    /**
+     * @param $username
+     */
+    public function setUsername($username): void
     {
         $this->username = $username;
     }
 
-    public function getSalt()
-    {
-        return null;
-    }
 
-    public function getPassword()
+    /**
+     * @return string
+     */
+    public function getPassword():string
     {
         return $this->password;
     }
 
-    public function setPassword($password)
+
+    /**
+     * @param $password
+     */
+    public function setPassword($password): void
     {
         $this->password = $password;
     }
 
-    public function getEmail()
+
+    /**
+     * @return string
+     */
+    public function getEmail():string
     {
         return $this->email;
     }
 
-    public function setEmail($email)
+
+    /**
+     * @param $email
+     */
+    public function setEmail($email): void
     {
         $this->email = $email;
     }
 
-    public function getRoles()
+
+    /**
+     * @return array
+     */
+    public function getRoles():array
     {
-        return array('ROLE_USER');
+        return ['ROLE_USER'];
     }
 
     public function eraseCredentials()
+    {
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSalt()
     {
     }
 }
