@@ -6,6 +6,7 @@ use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -72,22 +73,29 @@ class TaskController extends Controller
      */
     public function editAction(Task $task, Request $request)
     {
+        $isAuthorised = $this->clientIsAuthorised($task);
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
-
         if ($form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('success', 'La tâche a bien été modifiée.');
-
-            return $this->redirectToRoute('task_list');
+            if (
+                $this->clientIsAuthorised($task)
+                xor$this->isAdminAndTaskUserIsNull($task)
+                xor $this->isAdminAndTaskUserIsAnonymous($task)
+                )
+            return $this->editTaskTraitment();
         }
 
-        return $this->render('task/edit.html.twig', [
-            'form' => $form->createView(),
-            'task' => $task,
-        ]);
+        if ($this->isAdminAndTaskUserIsNull($task)
+            xor $this->isAdminAndTaskUserIsAnonymous($task)
+            xor $isAuthorised) {
+            return $this->render('task/edit.html.twig', [
+                'form' => $form->createView(),
+                'task' => $task,
+            ]);
+        }
+        else{
+            return $this->redirectToRoute('task_list');
+        }
     }
 
     /**
@@ -96,11 +104,14 @@ class TaskController extends Controller
      */
     public function toggleTaskAction(Task $task)
     {
-        $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
-
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
-
+        if (
+            $this->clientIsAuthorised($task)
+            xor $this->isAdminAndTaskUserIsNull($task)
+            xor $this->isAdminAndTaskUserIsAnonymous($task)
+        )
+            $this->changeToggleStatus($task);
+        else
+            $this->addFlash('warning', 'Vous n\'avais pas les autorisations pour modifier cette tache.');
         return $this->redirectToRoute('task_list');
     }
 
@@ -110,12 +121,83 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
+        if (
+            $this->clientIsAuthorised($task)
+            xor $this->isAdminAndTaskUserIsNull($task)
+            xor $this->isAdminAndTaskUserIsAnonymous($task)
+        )
+            $this->deleteTask($task);
+        else
+            $this->addFlash('warning', 'Vous n\'avais pas les autorisation pour supprimer cette tache.');
+
+        return $this->redirectToRoute('task_list');
+    }
+
+    /**
+     * @param Task $task
+     */
+    private function changeToggleStatus(Task $task): void
+    {
+        $task->toggle(!$task->isDone());
+        $this->getDoctrine()->getManager()->flush();
+
+        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+    }
+
+    /**
+     * @param Task $task
+     */
+    private function deleteTask(Task $task): void
+    {
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
-
         $this->addFlash('success', 'La tâche a bien été supprimée.');
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    private function editTaskTraitment(): RedirectResponse
+    {
+        $this->getDoctrine()->getManager()->flush();
+
+        $this->addFlash('success', 'La tâche a bien été modifiée.');
 
         return $this->redirectToRoute('task_list');
+    }
+
+    /**
+     * @param Task $task
+     * @return bool
+     */
+    private function isAdminAndTaskUserIsNull(Task $task): bool
+    {
+        return $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
+            && $task->getUser() === null;
+    }
+
+    /**
+     * @param Task $task
+     * @return bool
+     */
+    private function isAdminAndTaskUserIsAnonymous(Task $task): bool
+    {
+        return $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
+            && $task->getUser() === 'anonymous';
+    }
+
+    /**
+     * @param Task $task
+     * @return bool
+     */
+    private function clientIsAuthorised(Task $task): bool
+    {
+        if ($task->getUser() == $this->getUser()) {
+            $isAuthorised = true;
+        } else {
+            $isAuthorised = false;
+        }
+        return $isAuthorised;
     }
 }
