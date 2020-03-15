@@ -8,27 +8,40 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 class TaskController extends Controller
 {
     /**
      * @Route("/tasks", name="task_list")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function listAction()
     {
+        /** @var AuthorizationChecker $securityContext */
+        $securityContext = $this->container->get('security.authorization_checker');
+        if ($securityContext->isGranted('ROLE_ADMIN'))
+            $tasks = $this->getDoctrine()
+                ->getRepository('AppBundle:Task')
+                ->findBy(['user' => [null, 'anonyme']]);
+        else
+            $tasks = $this->getDoctrine()
+                ->getRepository('AppBundle:Task')
+                ->findBy(['user' => $this->get('security.token_storage')
+                    ->getToken()
+                    ->getUser()]);
+
         return $this->render(
             'task/list.html.twig',
             [
-                'tasks' => $this->getDoctrine()
-                    ->getRepository('AppBundle:Task')
-                    ->findAll()
+                'tasks' => $tasks
             ]
         );
     }
 
     /**
      * @Route("/tasks/create", name="task_create")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function createAction(Request $request)
     {
@@ -36,10 +49,12 @@ class TaskController extends Controller
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
-
+        $user = $this->get('security.token_storage')
+            ->getToken()
+            ->getUser();
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-
+            $task->setUser($user);
             $em->persist($task);
             $em->flush();
 
@@ -53,7 +68,7 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function editAction(Task $task, Request $request)
     {
@@ -91,6 +106,7 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function deleteTaskAction(Task $task)
     {
