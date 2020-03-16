@@ -3,68 +3,140 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
 use AppBundle\Form\TaskType;
+use AppBundle\Repository\TaskRepositoy;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
-class TaskController extends Controller
+/**
+ * Class TaskController
+ * @package AppBundle\Controller
+ */
+class TaskController
 {
+    /** @var EntityManagerInterface */
+    private $em;
+    /** @var AuthorizationCheckerInterface */
+    private $userChecker;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+    /** @var FlashBagInterface */
+    private $flashBag;
+    /** @var RouterInterface */
+    private $router;
+    /** @var UrlGeneratorInterface */
+    private $urlGenerator;
+    /** @var Environment */
+    private $environment;
+    /** @var FormFactoryInterface */
+    private $formFactory;
+    /** @var TaskRepositoy */
+    private $taskRepo;
+
+    /**
+     * TaskController constructor.
+     * @param EntityManagerInterface $em
+     * @param AuthorizationCheckerInterface $userChecker
+     * @param TokenStorageInterface $tokenStorage
+     * @param FlashBagInterface $flashBag
+     * @param RouterInterface $router
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param Environment $environment
+     * @param FormFactoryInterface $formFactory
+     * @param TaskRepositoy $taskRepo
+     */
+    public function __construct(
+        EntityManagerInterface $em,
+        AuthorizationCheckerInterface $userChecker,
+        TokenStorageInterface $tokenStorage,
+        FlashBagInterface $flashBag,
+        RouterInterface $router,
+        UrlGeneratorInterface $urlGenerator,
+        Environment $environment,
+        FormFactoryInterface $formFactory,
+        TaskRepositoy $taskRepo
+    ) {
+        $this->em = $em;
+        $this->userChecker = $userChecker;
+        $this->tokenStorage = $tokenStorage;
+        $this->flashBag = $flashBag;
+        $this->router = $router;
+        $this->urlGenerator = $urlGenerator;
+        $this->environment = $environment;
+        $this->formFactory = $formFactory;
+        $this->taskRepo = $taskRepo;
+    }
+
+
     /**
      * @Route("/tasks", name="task_list")
      * @IsGranted("IS_AUTHENTICATED_FULLY")
      */
     public function listAction()
     {
-        /** @var AuthorizationChecker $securityContext */
-        $securityContext = $this->container->get('security.authorization_checker');
-        if ($securityContext->isGranted('ROLE_ADMIN'))
-            $tasks = $this->getDoctrine()
-                ->getRepository('AppBundle:Task')
-                ->findBy(['user' => [null, 'anonyme']]);
-        else
-            $tasks = $this->getDoctrine()
-                ->getRepository('AppBundle:Task')
-                ->findBy(['user' => $this->get('security.token_storage')
-                    ->getToken()
-                    ->getUser()]);
-
-        return $this->render(
-            'task/list.html.twig',
-            [
-                'tasks' => $tasks
-            ]
+        /** @var User $user */
+        $user =  $this->tokenStorage->getToken()->getUser();
+        if ($this->userChecker->isGranted('ROLE_ADMIN')) {
+            $tasks = $this->getTaskAdminRole($user);
+        } else {
+            $tasks = $this->getTaskUserRole($user);
+        }
+        return new Response(
+                $this->environment->render(
+                'task/list.html.twig',
+                [
+                    'tasks' => $tasks
+                ]
+            )
         );
     }
 
     /**
      * @Route("/tasks/create", name="task_create")
      * @IsGranted("IS_AUTHENTICATED_FULLY")
+     * @param Request $request
+     * @return RedirectResponse|Response
+     * @throws ORMException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function createAction(Request $request)
     {
+        /** @var Task $task */
         $task = new Task();
-        $form = $this->createForm(TaskType::class, $task);
-
+        $form = $this->formFactory->create(TaskType::class, $task);
+        /** @var User $user */
+        $user =  $this->tokenStorage->getToken()->getUser();
         $form->handleRequest($request);
-        $user = $this->get('security.token_storage')
-            ->getToken()
-            ->getUser();
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $task->setUser($user);
-            $em->persist($task);
-            $em->flush();
-
-            $this->addFlash('success', 'La tâche a été bien été ajoutée.');
-
-            return $this->redirectToRoute('task_list');
+            $this->taskRepo->addTask($task, $user);
+            $this->flashBag->add('success', 'La tâche a été bien été ajoutée.');
+            return new RedirectResponse($this->urlGenerator->generate('task_list'));
         }
 
-        return $this->render('task/create.html.twig', ['form' => $form->createView()]);
+        return new Response($this->environment->render(
+            'task/create.html.twig',
+            [
+                'form' => $form->createView()
+            ]
+        ));
     }
 
     /**
@@ -73,28 +145,27 @@ class TaskController extends Controller
      */
     public function editAction(Task $task, Request $request)
     {
-        $isAuthorised = $this->clientIsAuthorised($task);
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->formFactory->create(TaskType::class, $task);
         $form->handleRequest($request);
         if ($form->isValid()) {
-            if (
-                $this->clientIsAuthorised($task)
-                xor$this->isAdminAndTaskUserIsNull($task)
-                xor $this->isAdminAndTaskUserIsAnonymous($task)
-                )
-            return $this->editTaskTraitment();
+            if ($this->isAuthorised($task)){
+                $this->taskRepo->editTaskTreatment();
+                $this->flashBag->add('success', 'La tâche a bien été modifiée.');
+                $this->urlGenerator->generate('task_list');
+            }
         }
 
-        if ($this->isAdminAndTaskUserIsNull($task)
-            xor $this->isAdminAndTaskUserIsAnonymous($task)
-            xor $isAuthorised) {
-            return $this->render('task/edit.html.twig', [
-                'form' => $form->createView(),
-                'task' => $task,
-            ]);
-        }
-        else{
-            return $this->redirectToRoute('task_list');
+        if ($this->isAuthorised($task)) {
+            return new Response(
+                $this->environment->render(
+                    'task/edit.html.twig', [
+                        'form' => $form->createView(),
+                        'task' => $task,
+                    ]
+                )
+            );
+        } else {
+            return new RedirectResponse($this->urlGenerator->generate('task_list'));
         }
     }
 
@@ -104,15 +175,11 @@ class TaskController extends Controller
      */
     public function toggleTaskAction(Task $task)
     {
-        if (
-            $this->clientIsAuthorised($task)
-            xor $this->isAdminAndTaskUserIsNull($task)
-            xor $this->isAdminAndTaskUserIsAnonymous($task)
-        )
-            $this->changeToggleStatus($task);
-        else
-            $this->addFlash('warning', 'Vous n\'avais pas les autorisations pour modifier cette tache.');
-        return $this->redirectToRoute('task_list');
+        if ($this->isAuthorised($task)){
+            $this->taskRepo->changeToggleStatus($task);
+            $this->flashBag->add('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
+        }
+        return new RedirectResponse($this->urlGenerator->generate('task_list'));
     }
 
     /**
@@ -121,50 +188,14 @@ class TaskController extends Controller
      */
     public function deleteTaskAction(Task $task)
     {
-        if (
-            $this->clientIsAuthorised($task)
-            xor $this->isAdminAndTaskUserIsNull($task)
-            xor $this->isAdminAndTaskUserIsAnonymous($task)
-        )
-            $this->deleteTask($task);
+        if ($this->isAuthorised($task)){
+            $this->taskRepo->deleteTask($task);
+            $this->flashBag->add('success', 'La tâche a bien été supprimée.');
+        }
         else
-            $this->addFlash('warning', 'Vous n\'avais pas les autorisation pour supprimer cette tache.');
+            $this->flashBag->add('warning', 'Vous n\'avais pas les autorisation pour supprimer cette tache.');
 
-        return $this->redirectToRoute('task_list');
-    }
-
-    /**
-     * @param Task $task
-     */
-    private function changeToggleStatus(Task $task): void
-    {
-        $task->toggle(!$task->isDone());
-        $this->getDoctrine()->getManager()->flush();
-
-        $this->addFlash('success', sprintf('La tâche %s a bien été marquée comme faite.', $task->getTitle()));
-    }
-
-    /**
-     * @param Task $task
-     */
-    private function deleteTask(Task $task): void
-    {
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
-        $em->flush();
-        $this->addFlash('success', 'La tâche a bien été supprimée.');
-    }
-
-    /**
-     * @return RedirectResponse
-     */
-    private function editTaskTraitment(): RedirectResponse
-    {
-        $this->getDoctrine()->getManager()->flush();
-
-        $this->addFlash('success', 'La tâche a bien été modifiée.');
-
-        return $this->redirectToRoute('task_list');
+        return new RedirectResponse($this->urlGenerator->generate('task_list'));
     }
 
     /**
@@ -173,7 +204,7 @@ class TaskController extends Controller
      */
     private function isAdminAndTaskUserIsNull(Task $task): bool
     {
-        return $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
+        return $this->userChecker->isGranted('ROLE_ADMIN')
             && $task->getUser() === null;
     }
 
@@ -183,7 +214,7 @@ class TaskController extends Controller
      */
     private function isAdminAndTaskUserIsAnonymous(Task $task): bool
     {
-        return $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')
+        return $this->userChecker->isGranted('ROLE_ADMIN')
             && $task->getUser() === 'anonymous';
     }
 
@@ -193,11 +224,52 @@ class TaskController extends Controller
      */
     private function clientIsAuthorised(Task $task): bool
     {
-        if ($task->getUser() == $this->getUser()) {
+        if ($task->getUser() == $this->tokenStorage->getToken()->getUser()) {
             $isAuthorised = true;
         } else {
             $isAuthorised = false;
         }
         return $isAuthorised;
+    }
+
+    /**
+     * @param User $user
+     * @return object[]
+     */
+    private function getTaskAdminRole(User $user)
+    {
+        return $this->em
+            ->getRepository('AppBundle:Task')
+            ->findBy(
+                [
+                    'user' => [
+                        null,
+                        'anonymous',
+                        $user
+                    ]
+                ]
+            );
+    }
+
+    /**
+     * @param User $user
+     * @return object[]
+     */
+    private function getTaskUserRole(User $user)
+    {
+        return $this->em
+            ->getRepository('AppBundle:Task')
+            ->findBy(['user' => $user]);
+    }
+
+    /**
+     * @param Task $task
+     * @return bool
+     */
+    private function isAuthorised(Task $task): bool
+    {
+        return $this->clientIsAuthorised($task)
+            xor $this->isAdminAndTaskUserIsNull($task)
+            xor $this->isAdminAndTaskUserIsAnonymous($task);
     }
 }
