@@ -32,7 +32,9 @@
             </div>
         {% endfor %}
     </div>
+    {% if tasks|length > 0 %}
     <div class="row" style="margin-top: 1em;">
             <a href="{{ path('task_create') }}" class="btn btn-info pull-right">Créer une tâche</a>
-        </div>
+    </div>
+    {% endif %}
 {% endblock %}
