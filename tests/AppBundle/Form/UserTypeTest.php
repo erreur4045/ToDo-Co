@@ -20,27 +20,29 @@ class UserTypeTest extends TypeTestCase
 {
     public function testFormFields()
     {
-        $data = [
-            'username' => 'maxime',
+        $formData = [
+            'username' => 'mm',
             'password' => [
-                'type' => PasswordType::class,
-                'required' => true,
-                'first_option' => 'maxime',
-                'second_option' => 'maxime',
+                'first_option' => 'passtest',
+                'second_option' => 'passtest',
             ],
-            'email' => 'maxime@maxime.com'
+            'email' => 'mm@pp.ff',
+            'roles' => ['ROLE_USER']
         ];
 
-        $toCompare = $this->getMockBuilder(User::class)->getMock();
-        $form = $this->factory->create(UserType::class, $toCompare);
+        $userToCompare = $this->createMock(User::class);
 
-        $user = $this->getMock(User::class);
+        $form = $this->factory->create(UserType::class, $userToCompare);
 
-        $user->setEmail('maximmmmmmme@maxime.com');
-        $user->setUsername('maxime');
-        $user->setPassword('maxime');
-        //dump($user);
-        $form->submit($data);
-        static::assertEquals($user, $toCompare);
+        $user = $this->createMock(User::class);
+        $user->setUsername('mm');
+        $user->setPassword('passtest');
+        $user->setEmail('mm@pp.ff');
+        $user->setRoles(['ROLE_USER']);
+
+        $form->submit($formData);
+
+        $this->assertEquals($user, $userToCompare);
+        $this->assertInstanceOf(User::class, $form->getData());
     }
 }

@@ -7,6 +7,7 @@ use AppBundle\Form\UserType;
 use AppBundle\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -117,7 +118,7 @@ class UserController
     }
 
     /**
-     * @Route("/users/{id}/edit", name="user_edit")
+     * @Route("/users/{id}/edit", name="user_edit", requirements={"id"="\d+"})
      * @IsGranted("ROLE_ADMIN")
      */
     public function editAction(User $user, Request $request)

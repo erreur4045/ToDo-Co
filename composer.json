@@ -31,10 +31,11 @@
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0",
+        "symfony/phpunit-bridge": "^5.0",
         "phpunit/phpunit": "^9.0.0",
         "doctrine/doctrine-fixtures-bundle": "^2.4.0",
-        "symfony/maker-bundle": "^1.14"
+        "symfony/maker-bundle": "^1.14",
+      "ext-xdebug": "*"
     },
     "scripts": {
         "symfony-scripts": [

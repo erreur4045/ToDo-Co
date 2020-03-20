@@ -18,7 +18,7 @@ class UserType extends AbstractType
             ->add('username', TextType::class, ['label' => "Nom d'utilisateur"])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'invalid_message' => 'Les deux mots de passe doivent correspondre.',
+                //'invalid_message' => 'Les deux mots de passe doivent correspondre.',
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
@@ -27,7 +27,7 @@ class UserType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'rôle administrateur ' => 'ROLE_ADMIN',
-                    'rôle utilisateur'    => 'ROLE_USER'
+                    'rôle utilisateur'    => 'ROLE_USER',
                 ],
                 'multiple' => true,
                 'expanded' => true,

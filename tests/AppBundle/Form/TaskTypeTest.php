@@ -12,6 +12,7 @@ namespace Tests\AppBundle\Form;
 
 
 use AppBundle\Entity\Task;
+use AppBundle\Entity\User;
 use AppBundle\Form\TaskType;
 use Symfony\Component\Form\Test\TypeTestCase;
 
@@ -20,16 +21,25 @@ class TaskTypeTest extends TypeTestCase
 
     public function testFormFields()
     {
-        $data = [
-            'title' => 'Titre test',
-            'content' => 'Content test'
+        $user = new User();
+        $formData = [
+            'title' => 'titre',
+            'content' => 'contenu de l\'article',
+            'user' => $user,
         ];
 
-        $task->setTitle('Titre test');
-        $task->setContent('Content test');
+        $taskToCompare = $this->createMock(Task::class);
 
-        $form->submit($data);
+        $form = $this->factory->create(TaskType::class, $taskToCompare);
 
-        static::assertEquals($task, $toCompare);
+        $task = $this->createMock(Task::class);
+        $task->setTitle('titre');
+        $task->setContent('contenu de l\'article');
+        $task->setUser($user);
+
+        $form->submit($formData);
+
+        $this->assertTrue($form->isValid());
+        $this->assertEquals($task, $taskToCompare);
     }
 }
