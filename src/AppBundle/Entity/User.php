@@ -40,7 +40,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="array")
      */
     private $roles;
 
@@ -156,14 +156,18 @@ class User implements UserInterface
         return $this->roles;
     }
 
-    public function eraseCredentials()
+    /**
+     * @inheritDoc
+     */
+    public function getSalt()
     {
     }
 
     /**
      * @inheritDoc
      */
-    public function getSalt()
+    public function eraseCredentials()
     {
+        // TODO: Implement eraseCredentials() method.
     }
 }

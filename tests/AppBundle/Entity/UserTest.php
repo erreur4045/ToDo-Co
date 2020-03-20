@@ -44,11 +44,13 @@ class UserTest extends TestCase
 
     public function testGetRoles()
     {
-        static::assertSame(array('ROLE_USER'), $this->user->getRoles());
+        $this->user->setRoles(['ROLE_USER']);
+        static::assertSame(['ROLE_USER'], $this->user->getRoles());
     }
     public function testGetId()
     {
-        static::assertSame(null, $this->user->getId());
+        $this->user->setId(4);
+        static::assertSame(4, $this->user->getId());
     }
     public function testGetSalt()
     {

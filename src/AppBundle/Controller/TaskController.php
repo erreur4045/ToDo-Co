@@ -89,7 +89,7 @@ class TaskController
                 'task/list.html.twig',
                 [
                     'tasks' => $tasks
-                    ]
+                ]
             )
         );
     }
@@ -139,6 +139,7 @@ class TaskController
                 $this->taskRepo->editTaskTreatment();
                 $this->flashBag->add('success', 'La tâche a bien été modifiée.');
                 $this->urlGenerator->generate('task_list');
+                return new RedirectResponse($this->urlGenerator->generate('task_list'));
             }
         }
 
