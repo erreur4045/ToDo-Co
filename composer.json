@@ -63,5 +63,9 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
+    },
+    "config": {
+        "classmap-authoritative": true,
+        "optimize-autoloader": true
     }
 }
