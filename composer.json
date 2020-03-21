@@ -27,7 +27,8 @@
         "symfony/polyfill-apcu": "^1.0",
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^4.0",
-        "incenteev/composer-parameter-handler": "^2.0"
+        "incenteev/composer-parameter-handler": "^2.0",
+        "symfony/class-loader": "^3.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
@@ -35,7 +36,7 @@
         "phpunit/phpunit": "^9.0.0",
         "doctrine/doctrine-fixtures-bundle": "^2.4.0",
         "symfony/maker-bundle": "^1.14",
-      "ext-xdebug": "*"
+        "ext-xdebug": "*"
     },
     "scripts": {
         "symfony-scripts": [
@@ -63,5 +64,9 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
+    },
+    "config": {
+        "classmap-authoritative": true,
+        "optimize-autoloader": true
     }
 }
