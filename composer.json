@@ -35,7 +35,7 @@
         "phpunit/phpunit": "^9.0.0",
         "doctrine/doctrine-fixtures-bundle": "^2.4.0",
         "symfony/maker-bundle": "^1.14",
-      "ext-xdebug": "*"
+        "ext-xdebug": "*"
     },
     "scripts": {
         "symfony-scripts": [

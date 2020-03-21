@@ -12,7 +12,7 @@ namespace Tests\AppBundle\Entity;
 
 
 use AppBundle\Entity\Task;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class TaskTest extends TestCase
 {

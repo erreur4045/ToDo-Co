@@ -12,7 +12,7 @@ namespace Tests\AppBundle\Entity;
 
 
 use AppBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
