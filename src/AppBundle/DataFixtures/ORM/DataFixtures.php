@@ -40,7 +40,7 @@ class DataFixtures implements FixtureInterface
         $userAdmin = new User();
         $userAdmin->setEmail(str_shuffle('sdfsdfsdfxcvbxcvbxcvbxcv').'@Email.fr');
         $userAdmin->setUsername('userAdmin');
-        $userAdmin->setPassword(password_hash('pp', PASSWORD_BCRYPT));
+        $userAdmin->setPassword(password_hash('password', PASSWORD_BCRYPT));
         $userAdmin->setRoles(['ROLE_ADMIN']);
         $userUser = new User();
         $userUser->setEmail(str_shuffle('sdfsdfsdfsadfasdfasdf').'@Email.fr');

@@ -1,0 +1,12 @@
+
+Blackfire cURL completed
+Graph URL https://blackfire.io/profiles/23d32dc5-52ca-4e2b-a8d2-ea94b429c191/graph
+No tests! Create some now https://blackfire.io/docs/cookbooks/tests
+3 recommendations https://blackfire.io/profiles/23d32dc5-52ca-4e2b-a8d2-ea94b429c191/graph?settings%5BtabPane%5D=recommendations
+
+Wall Time     453ms
+I/O Wait      350ms
+CPU Time      103ms
+Memory       17.1MB
+Network         n/a     n/a     n/a
+SQL           997µs     2rq

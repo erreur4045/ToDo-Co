@@ -1,0 +1,12 @@
+Preflight: [----------------------------------------] 0/1Preflight: [########################################] 1/1Profiling: [####------------------------------------] 1/10Profiling: [########--------------------------------] 2/10Profiling: [############----------------------------] 3/10Profiling: [################------------------------] 4/10Profiling: [####################--------------------] 5/10Profiling: [########################----------------] 6/10Profiling: [############################------------] 7/10Profiling: [################################--------] 8/10Profiling: [####################################----] 9/10Profiling: [########################################] 10/10
+Blackfire cURL completed
+Graph URL https://blackfire.io/profiles/06e43812-4ef3-4dca-9def-39980d69ec81/graph
+No tests! Create some now https://blackfire.io/docs/cookbooks/tests
+2 recommendations https://blackfire.io/profiles/06e43812-4ef3-4dca-9def-39980d69ec81/graph?settings%5BtabPane%5D=recommendations
+
+Wall Time     219ms
+I/O Wait      167ms
+CPU Time     51.9ms
+Memory       9.05MB
+Network         n/a     n/a     n/a
+SQL             n/a     n/a
