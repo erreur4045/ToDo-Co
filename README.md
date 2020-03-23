@@ -6,6 +6,7 @@
 [Document pour la contribution](https://github.com/erreur4045/ToDo-Co/master/Contributing.md)
 
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ce4a1463cb724de19ff9ef371f688422)](https://app.codacy.com/manual/erreur4045/ToDo-Co?utm_source=github.com&utm_medium=referral&utm_content=erreur4045/ToDo-Co&utm_campaign=Badge_Grade_Dashboard)
 [![Maintainability](https://api.codeclimate.com/v1/badges/770472da3b7b6b6cbbab/maintainability)](https://codeclimate.com/github/erreur4045/BileMo/maintainability)
 
 
