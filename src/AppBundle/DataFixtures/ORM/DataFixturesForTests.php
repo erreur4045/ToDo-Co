@@ -22,7 +22,7 @@ class DataFixturesForTests implements FixtureInterface
         for ($i = 0; $i <= 5; $i++) {
             $user = new User();
             $user->setEmail(str_shuffle('sdfsdfsdferwtwerxcbvbxcvb').'@Email.fr');
-            $user->setUsername(str_shuffle('kikoudf'));
+            $user->setUsername(str_shuffle('kikodfgsgsdfgudf'));
             $user->setPassword('$2y$13$5denqc6U/vV0R.5JD2/WUeSokO.1KTOS3aClChSdYs8ttkVxCANCG');
             $user->setRoles(['ROLE_USER']);
             $manager->persist($user);
