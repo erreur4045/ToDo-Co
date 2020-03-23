@@ -7,7 +7,7 @@ use AppBundle\Entity\User;
 use AppBundle\Form\TaskType;
 use AppBundle\Repository\TaskRepositoy;
 use Doctrine\ORM\ORMException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -3,11 +3,10 @@
 
 [Rapport Securité sous symfony](https://github.com/erreur4045/ToDo-Co)
 
-[Document pour la contribution](https://github.com/erreur4045/ToDo-Co/master/Contributing.md)
+[Document pour la contribution](https://github.com/erreur4045/ToDo-Co/blob/master/Contributing.md)
 
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/770472da3b7b6b6cbbab/maintainability)](https://codeclimate.com/github/erreur4045/BileMo/maintainability)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/691883ef591043579fd453e30df6f0d7)](https://www.codacy.com/manual/erreur4045/ToDo-Co?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=erreur4045/ToDo-Co&amp;utm_campaign=Badge_Grade)
 
 ![symfony](https://symfony.com/images/logos/header-logo.svg)
 
