@@ -46,5 +46,7 @@ $ php bin/console doctrine:fixtures:load
 ```
 vous pouvez utiliser les auths suivant si vous avez ajouter les fixtures:
 
-username : adminUsername
-mot de passe : password
+ * username : 
+    * adminUsername
+ * mot de passe : 
+    * password
