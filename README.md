@@ -1,7 +1,7 @@
 # ToDo-Co
-[Rapport Audit Qualité](https://github.com/erreur4045/ToDo-Co)
+[Rapport Audit Qualité/Performance](https://github.com/erreur4045/ToDo-Co/blob/master/Docs/Audit_Performance.pdf)
 
-[Rapport Securité sous symfony](https://github.com/erreur4045/ToDo-Co)
+[Rapport Securité sous symfony](https://github.com/erreur4045/ToDo-Co/blob/master/Docs/L'Authentification_Symfony.pdf)
 
 [Document pour la contribution](https://github.com/erreur4045/ToDo-Co/blob/master/Contributing.md)
 
