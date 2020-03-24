@@ -79,6 +79,7 @@ class User implements UserInterface
 
     /**
      * @param $id
+     * @codeCoverageIgnore
      */
     public function setId($id): void
     {

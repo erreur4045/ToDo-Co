@@ -153,8 +153,6 @@ class TaskController
                     ]
                 )
             );
-        } else {
-            return new RedirectResponse($this->urlGenerator->generate('task_list'));
         }
     }
 

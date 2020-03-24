@@ -26,10 +26,8 @@ class DefaultControllerTest extends AbstractTestController
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 
         $this->assertSame(1, $crawler->filter('html:contains("Bienvenue sur Todo List, l\'application vous permettant de gérer l\'ensemble de vos tâches sans effort !")')->count());
-        $this->assertSame(1, $crawler->filter('html:contains("Consulter la liste des tâches à faire")')->count());
         $this->assertSame(1, $crawler->filter('html:contains("Créer une nouvelle tâche")')->count());
 
     }
-    /** test */
 }
 
