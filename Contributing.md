@@ -67,6 +67,7 @@ php bin/console doctrine:database:create
 
 php bin/console doctrine:schema:update --force
 ```
+
 ##Contributions
 #### Step 1 :
 
@@ -85,7 +86,7 @@ The following commands can be used to list the errors and to set them automatica
 phpcs
 phpcbf
 ```
-Be clear in your commit messages and comment on your code if necessary.
+Be clear in your commit messages and comment on your code if necessary
 
 #####Git flow
 * Fork
