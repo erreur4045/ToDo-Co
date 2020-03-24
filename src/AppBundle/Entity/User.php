@@ -52,6 +52,7 @@ class User implements UserInterface
 
     /**
      * @return mixed
+     * @codeCoverageIgnore
      */
     public function getTask()
     {
@@ -60,6 +61,7 @@ class User implements UserInterface
 
     /**
      * @param mixed $task
+     * @codeCoverageIgnore
      */
     public function setTask($task): void
     {
@@ -165,6 +167,7 @@ class User implements UserInterface
 
     /**
      * @inheritDoc
+     * @codeCoverageIgnore
      */
     public function eraseCredentials()
     {
