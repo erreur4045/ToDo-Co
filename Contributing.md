@@ -1,12 +1,12 @@
 #Contributions FR
 ##Init Project
-#####Forker le depot avec les commandes suivantes :
+#####Forker le depot avec les commandes suivantes
 ```
 $ git clone https://github.com/erreur4045/ToDo-Co.git
 $ cd ToDo-Co
 $ git fork
 ```
-#####Mettez à jours le projet avec :
+#####Mettez à jours le projet avec
 ```
 composer install
 ```
@@ -48,7 +48,7 @@ Une fois ces etapes effectuer une pesonne tier verrifira testera de votre code, 
 
 #ContributionsEN
 ##Init Project
-#### Step 1 :
+#### Step 1
 Fork the repository with the following commands:
 ```
 $ git clone https://github.com/erreur4045/ToDo-Co.git
@@ -59,7 +59,7 @@ Update the project with :
 ```
 composer install
 ```
-#### Step 2 :
+#### Step 2
 Install the database according to your environment.
 Example under windows
 ```
@@ -69,7 +69,7 @@ php bin/console doctrine:schema:update --force
 ```
 
 ##Contributions
-#### Step 1 :
+#### Step 1
 
 Add your changes and run the test suite.
 
@@ -77,7 +77,7 @@ Example under windows :
 ```
 vendor\bin\phpunit
 ```
-#### Step 2 :
+#### Step 2
 If the test suite runs without errors or warnings, you can add a pull request.
 The psr1 and ps12 standards are implemented on this project.
 
